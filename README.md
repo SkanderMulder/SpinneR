@@ -19,7 +19,7 @@ SpinneR provides a simple `with_spinner()` function that displays a lightweight,
 ```r
 # Install from GitHub
 # install.packages("remotes")
-remotes::install_github("yourusername/SpinneR")
+remotes::install_github("skandermulder/SpinneR")
 ```
 
 ## Usage
@@ -114,7 +114,7 @@ The package automatically compiles C++ components during installation:
 
 ```r
 # Clone repository
-git clone https://github.com/yourusername/SpinneR.git
+git clone https://github.com/skandermulder/SpinneR.git
 cd SpinneR
 
 # Build package
