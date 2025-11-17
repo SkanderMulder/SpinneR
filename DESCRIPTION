@@ -3,14 +3,20 @@ Title: An Asynchronous CLI Spinner for R
 Version: 0.1.0
 Authors@R:
     person("Skander", "Tahar Mulder", , "skander.tm@outlook.com", role = c("aut", "cre"))
-Description: Provides a simple `with_spinner()` function to display a non-blocking, asynchronous spinner in the CLI while evaluating R expressions.
+Description: Provides a simple `with_spinner()` function to display a non-blocking,
+    asynchronous spinner in the CLI while evaluating R expressions. The spinner
+    runs in a background process using semaphore-based inter-process communication
+    for clean resource management.
 License: MIT + file LICENSE
+URL: https://github.com/skandermulder/SpinneR
+BugReports: https://github.com/skandermulder/SpinneR/issues
 Encoding: UTF-8
-RoxygenNote: 7.3.3
-Roxygen: list(markdown = TRUE)
+Depends: R (>= 3.5.0)
 Imports:
     tools
 Suggests:
     testthat (>= 3.0.0)
-useDynLib: no
+SystemRequirements: C++11
+RoxygenNote: 7.3.3
+Roxygen: list(markdown = TRUE)
 Config/testthat/edition: 3
