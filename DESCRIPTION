@@ -1,0 +1,17 @@
+Package: SpinneR
+Title: An Asynchronous CLI Spinner for R
+Version: 0.1.0
+Author: Gemini [aut, cre]
+Maintainer: Gemini <gemini@google.com>
+Description: Provides a simple `with_spinner()` function to display a non-blocking, asynchronous spinner in the CLI while evaluating R expressions.
+License: MIT + file LICENSE
+Encoding: UTF-8
+RoxygenNote: 7.3.3
+Roxygen: list(markdown = TRUE)
+Imports:
+    callr,
+    tools
+Suggests:
+    testthat (>= 3.0.0)
+useDynLib: no
+Config/testthat/edition: 3
