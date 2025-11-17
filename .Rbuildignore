@@ -4,3 +4,5 @@
 ^instructions\.md$
 ^spinnerlogo\.png$
 ^test\.R$
+^\.claude$
+^\.github$

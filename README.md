@@ -1,5 +1,11 @@
 # SpinneR <img src="man/figures/logo.png" align="right" height="139" alt="" />
 
+<!-- badges: start -->
+[![R-CMD-check](https://github.com/skandermulder/SpinneR/actions/workflows/r.yml/badge.svg)](https://github.com/skandermulder/SpinneR/actions/workflows/r.yml)
+[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+<!-- badges: end -->
+
 An asynchronous CLI spinner for R that displays non-blocking animations while evaluating expressions.
 
 ## Overview
