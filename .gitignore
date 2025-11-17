@@ -1,0 +1,28 @@
+# Compiled executables
+exec/spinner
+exec/sem_post_helper
+exec/*.exe
+
+# Compiled Object files
+*.o
+*.so
+*.dll
+*.dylib
+
+# R files
+.Rhistory
+.RData
+.Rproj.user
+*.Rproj
+
+# macOS
+.DS_Store
+
+# IDEs
+.vscode/
+.idea/
+
+# Build artifacts
+src/*.o
+src/*.so
+*.tar.gz

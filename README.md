@@ -16,9 +16,10 @@ SpinneR provides a simple `with_spinner()` function that displays a lightweight,
 
 - **Non-blocking**: Spinner runs asynchronously without interfering with R execution
 - **Cross-platform**: Works on Linux, macOS, and Windows
-- **Minimal dependencies**: Only requires `callr` and `tools` packages
+- **Minimal dependencies**: Only requires the `tools` package (part of base R)
+- **Smart detection**: Automatically disables in non-interactive sessions (batch mode, Rscript)
 - **Clean resource management**: Automatically cleans up background processes and semaphores
-- **Error handling**: Gracefully handles errors in user expressions while stopping the spinner
+- **Robust error handling**: Gracefully handles errors in user expressions while ensuring spinner cleanup
 
 ## Installation
 
@@ -111,8 +112,7 @@ SpinneR uses a lightweight architecture:
 - C++ compiler (for building from source)
   - Linux/macOS: `g++` with pthread support
   - Windows: MSVC or MinGW
-- `callr` package
-- `tools` package
+- `tools` package (part of base R)
 
 ## Building from Source
 
@@ -201,10 +201,11 @@ devtools::check()
 ### Resource Management
 
 The package ensures proper cleanup through:
-1. `on.exit()` handlers in R to stop spinner and kill process
+1. `on.exit()` handlers in R to stop spinner and terminate process
 2. Semaphore signaling for graceful shutdown
-3. Process supervision via `callr::r_bg(supervise = TRUE)`
+3. Automatic detection and handling of non-interactive sessions
 4. Explicit semaphore unlinking on exit
+5. Comprehensive error checking in both R and C++ code
 
 ## License
 

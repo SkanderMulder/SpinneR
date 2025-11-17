@@ -4,6 +4,8 @@
 #else
 #include <semaphore.h>
 #include <fcntl.h>
+#include <errno.h>
+#include <cstring>
 #endif
 
 int main(int argc, char* argv[]) {
@@ -23,11 +25,21 @@ int main(int argc, char* argv[]) {
 #else
     sem_t* sem = sem_open(SEM_NAME, 0);
     if (sem == SEM_FAILED) {
-        std::cerr << "Failed to open semaphore" << std::endl;
+        std::cerr << "Failed to open semaphore: " << std::strerror(errno) << std::endl;
         return 1;
     }
-    sem_post(sem);
-    sem_close(sem); // Ensure sem_close is called
+
+    // Post to semaphore with error checking
+    if (sem_post(sem) == -1) {
+        std::cerr << "Failed to post semaphore: " << std::strerror(errno) << std::endl;
+        sem_close(sem);
+        return 1;
+    }
+
+    if (sem_close(sem) == -1) {
+        std::cerr << "Failed to close semaphore: " << std::strerror(errno) << std::endl;
+        return 1;
+    }
 #endif
     return 0;
 }

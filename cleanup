@@ -1,0 +1,24 @@
+#!/bin/sh
+
+# Cleanup script for R package build artifacts
+# This is called during R CMD build to remove compiled binaries and build artifacts
+
+echo "Cleaning up build artifacts..."
+
+# Remove compiled executables
+rm -f exec/spinner
+rm -f exec/sem_post_helper
+rm -f exec/spinner.exe
+rm -f exec/sem_post_helper.exe
+
+# Remove object files if any
+rm -f csource/*.o
+rm -f src/*.o
+rm -f src/*.so
+rm -f src/*.dll
+
+# Remove any core dumps or other temporary files
+rm -f core.*
+
+echo "Cleanup complete"
+exit 0
