@@ -1,4 +1,4 @@
-# SpinneR
+# SpinneR <img src="man/figures/logo.png" align="right" height="139" alt="" />
 
 An asynchronous CLI spinner for R that displays non-blocking animations while evaluating expressions.
 

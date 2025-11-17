@@ -1,4 +1,3 @@
-#' @importFrom callr r_bg
 #' @importFrom tools file_ext
 #' @noRd
 get_exec_path <- function(name) {
@@ -13,13 +12,13 @@ spinner_semaphore_name <- "/spinner_semaphore"
 #' @noRd
 start_spinner <- function() {
   spinner_path <- get_exec_path("spinner")
-  callr::r_bg(
-    func = function(path) {
-      system2(path, stdout = "", stderr = "")
-    },
-    args = list(path = spinner_path),
-    supervise = TRUE
-  )
+  if (Sys.info()["sysname"] == "Windows") {
+    system2(spinner_path, wait = FALSE)
+  } else {
+    system2("sh", args = c("-c", shQuote(paste0(spinner_path, " &"))), wait = FALSE)
+  }
+  Sys.sleep(0.1)
+  invisible(NULL)
 }
 
 #' @noRd
@@ -45,12 +44,10 @@ stop_spinner <- function() {
 #' })
 #' }
 with_spinner <- function(expr) {
-  spinner_process <- start_spinner()
+  start_spinner()
   on.exit({
     stop_spinner()
-    if (spinner_process$is_alive()) {
-      spinner_process$kill()
-    }
+    Sys.sleep(0.1)
   }, add = TRUE)
 
   result <- force(expr)
