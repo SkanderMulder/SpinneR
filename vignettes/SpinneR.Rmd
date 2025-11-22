@@ -1,0 +1,200 @@
+---
+title: "Getting Started with SpinneR"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting Started with SpinneR}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Introduction
+
+SpinneR provides an asynchronous CLI spinner for R that displays non-blocking animations while evaluating long-running expressions. The spinner runs in a separate background process using cross-platform semaphore-based inter-process communication (IPC), ensuring minimal overhead and clean resource management.
+
+## Installation
+
+You can install SpinneR from GitHub:
+
+```{r eval=FALSE}
+# install.packages("remotes")
+remotes::install_github("skandermulder/SpinneR")
+```
+
+## Basic Usage
+
+The primary function in SpinneR is `with_spinner()`, which wraps any R expression and displays a spinner while it executes:
+
+```{r eval=FALSE}
+library(SpinneR)
+
+# Simple usage with a long-running task
+result <- with_spinner({
+  Sys.sleep(3)  # Simulate a long computation
+  "Task complete!"
+})
+```
+
+The spinner will automatically start when the expression begins evaluating and stop when it completes.
+
+## Real-World Examples
+
+### Data Processing
+
+Use `with_spinner()` to provide visual feedback during data processing tasks:
+
+```{r eval=FALSE}
+processed_data <- with_spinner({
+  # Read a large CSV file
+  raw_data <- read.csv("large_dataset.csv")
+
+  # Perform complex transformations
+  cleaned <- clean_data(raw_data)
+  transformed <- transform_data(cleaned)
+
+  transformed
+})
+```
+
+### API Calls
+
+Provide feedback during slow API requests:
+
+```{r eval=FALSE}
+response <- with_spinner({
+  # Make a slow API request
+  result <- httr::GET("https://api.example.com/data")
+  httr::content(result)
+})
+```
+
+### Model Training
+
+Keep users informed during model training:
+
+```{r eval=FALSE}
+model <- with_spinner({
+  # Train a machine learning model
+  lm(mpg ~ ., data = mtcars)
+})
+```
+
+## Return Values
+
+`with_spinner()` returns the value of the evaluated expression:
+
+```{r eval=FALSE}
+# The result is the value of the last expression
+x <- with_spinner({
+  a <- 10
+  b <- 20
+  a + b  # Returns 30
+})
+print(x)  # 30
+```
+
+## Error Handling
+
+Errors in your expression are properly propagated, and the spinner is automatically cleaned up:
+
+```{r eval=FALSE}
+tryCatch(
+  with_spinner({
+    stop("Something went wrong!")
+  }),
+  error = function(e) {
+    message("Caught error: ", e$message)
+    # Spinner is automatically stopped even on error
+  }
+)
+```
+
+## Non-Interactive Sessions
+
+In non-interactive sessions (batch mode, Rscript, R CMD check), the spinner is automatically disabled and expressions are evaluated directly without any visual feedback. This ensures your code works seamlessly in automated environments.
+
+```{r eval=FALSE}
+# In non-interactive mode, this simply evaluates the expression
+# without starting a spinner
+result <- with_spinner({
+  expensive_computation()
+})
+```
+
+## How It Works
+
+SpinneR uses a lightweight architecture:
+
+1. **C++ Background Process**: A minimal compiled executable displays the spinner animation
+2. **Semaphore IPC**: POSIX semaphores (Linux/macOS) or Windows Semaphores handle cross-process communication
+3. **R Wrapper**: The `with_spinner()` function manages the background process lifecycle
+4. **Clean Shutdown**: Semaphore signals tell the spinner to stop, and `on.exit()` ensures proper cleanup
+
+This architecture ensures:
+- **Non-blocking operation**: Your R code runs normally while the spinner animates
+- **Minimal overhead**: The background process is lightweight and efficient
+- **Robust cleanup**: Resources are always properly released, even on errors
+- **Cross-platform**: Works on Linux, macOS, and Windows
+
+## Tips and Best Practices
+
+### When to Use Spinners
+
+Use spinners for operations that:
+- Take more than a few seconds
+- Don't produce their own progress output
+- Run in interactive R sessions
+
+### When Not to Use Spinners
+
+Avoid spinners for:
+- Very quick operations (< 1 second)
+- Operations that already provide progress bars
+- Non-interactive scripts (the spinner auto-disables anyway)
+
+### Combining with Progress Bars
+
+For operations with multiple steps, you might combine spinners with progress bars:
+
+```{r eval=FALSE}
+# Use spinner for the overall operation
+with_spinner({
+  # Use progress bar for individual steps
+  pb <- txtProgressBar(min = 0, max = 100, style = 3)
+  for (i in 1:100) {
+    Sys.sleep(0.05)
+    setTxtProgressBar(pb, i)
+  }
+  close(pb)
+})
+```
+
+## Troubleshooting
+
+### Spinner Not Appearing
+
+If the spinner doesn't appear:
+1. Ensure you're in an interactive R session (`interactive()` returns `TRUE`)
+2. Check that the C++ executables are properly installed
+3. Verify your terminal supports ANSI escape sequences
+
+### Performance Issues
+
+If you experience performance issues:
+- The spinner runs in a separate process and should have minimal impact
+- If problems persist, file an issue at https://github.com/skandermulder/SpinneR/issues
+
+## Next Steps
+
+Now that you're familiar with the basics:
+- Integrate spinners into your existing workflows
+- Provide feedback on the package's GitHub repository
+- Share your use cases with the community
+
+For more information, see the [package documentation](https://skandermulder.github.io/SpinneR/).

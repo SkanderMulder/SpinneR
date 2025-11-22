@@ -15,7 +15,10 @@ Depends: R (>= 3.5.0)
 Imports:
     tools
 Suggests:
+    knitr,
+    rmarkdown,
     testthat (>= 3.0.0)
+VignetteBuilder: knitr
 SystemRequirements: C++11
 RoxygenNote: 7.3.3
 Roxygen: list(markdown = TRUE)
