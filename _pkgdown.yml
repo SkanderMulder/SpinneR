@@ -1,0 +1,18 @@
+url: https://skandermulder.github.io/SpinneR/
+template:
+  bootstrap: 5
+  bootswatch: flatly
+
+reference:
+- title: Main Functions
+  desc: Core functionality for async CLI spinners
+  contents:
+  - with_spinner
+
+development:
+  mode: auto
+
+navbar:
+  structure:
+    left:  [intro, reference, articles, news]
+    right: [search, github]

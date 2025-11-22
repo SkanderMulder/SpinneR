@@ -6,3 +6,6 @@
 ^test\.R$
 ^\.claude$
 ^\.github$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
