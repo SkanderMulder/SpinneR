@@ -1,13 +1,10 @@
-#' @importFrom tools file_ext
-#' @noRd
-
 # Constants for spinner timing
 SPINNER_START_DELAY <- 0.1  # Delay after starting spinner process (seconds)
 SPINNER_STOP_DELAY <- 0.1   # Delay after stopping spinner process (seconds)
 
 #' Get path to compiled executable
 #' @param name Name of the executable (without extension)
-#' @return Full path to executable
+#' @returns Full path to executable
 #' @noRd
 get_exec_path <- function(name) {
   if (Sys.info()["sysname"] == "Windows") {
@@ -22,24 +19,37 @@ get_exec_path <- function(name) {
 spinner_semaphore_name <- "/spinner_semaphore"
 
 #' Start the spinner background process
-#' @return TRUE if successful, FALSE otherwise
+#' @returns TRUE if successful, FALSE otherwise
 #' @noRd
 start_spinner <- function() {
   spinner_path <- get_exec_path("spinner")
 
   # Validate executable exists
   if (spinner_path == "" || !file.exists(spinner_path)) {
-    warning("Spinner executable not found. Please reinstall the SpinneR package.")
+    warning(
+      "Spinner executable not found. ",
+      "Please reinstall the SpinneR package."
+    )
     return(FALSE)
   }
 
   # Start spinner process
   result <- tryCatch({
     if (Sys.info()["sysname"] == "Windows") {
-      status <- system2(spinner_path, wait = FALSE, stdout = FALSE, stderr = FALSE)
+      status <- system2(
+        spinner_path,
+        wait = FALSE,
+        stdout = FALSE,
+        stderr = FALSE
+      )
     } else {
-      status <- system2("sh", args = c("-c", shQuote(paste0(spinner_path, " &"))),
-                       wait = FALSE, stdout = FALSE, stderr = FALSE)
+      status <- system2(
+        "sh",
+        args = c("-c", shQuote(paste0(spinner_path, " &"))),
+        wait = FALSE,
+        stdout = FALSE,
+        stderr = FALSE
+      )
     }
 
     # Give spinner time to initialize
@@ -84,15 +94,13 @@ stop_spinner <- function() {
 #' expression is evaluated directly.
 #'
 #' @param expr The R expression to evaluate.
-#' @return The result of the evaluated expression.
+#' @returns The result of the evaluated expression.
 #' @export
-#' @examples
-#' \dontrun{
+#' @examplesIf interactive()
 #' with_spinner({
-#'   Sys.sleep(3) # Simulate a long-running task
+#'   Sys.sleep(2) # Simulate a long-running task
 #'   "Task complete!"
 #' })
-#' }
 with_spinner <- function(expr) {
   # Skip spinner in non-interactive sessions (batch mode, Rscript, etc.)
   if (!interactive()) {
