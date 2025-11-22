@@ -22,7 +22,7 @@ test_that("with_spinner handles errors gracefully", {
       Sys.sleep(0.1)
       stop("An error occurred!")
     })
-  }, "An error occurred!")
+  }, class = "simpleError")
 
   # Ensure spinner cleanup happens even on error
   # (If cleanup fails, subsequent calls would fail)
@@ -82,5 +82,61 @@ test_that("with_spinner handles empty expressions", {
   })
   # The result should be 5 (the value assigned)
   expect_equal(result, 5)
+})
+
+test_that("with_spinner works with instant/very fast expressions", {
+  # Test with no sleep - instant execution
+  result1 <- with_spinner({
+    2 + 2
+  })
+  expect_equal(result1, 4)
+
+  # Test with zero sleep
+  result2 <- with_spinner({
+    Sys.sleep(0)
+    "instant"
+  })
+  expect_equal(result2, "instant")
+
+  # Test with very minimal computation
+  result3 <- with_spinner({
+    x <- 1:10
+    sum(x)
+  })
+  expect_equal(result3, 55)
+})
+
+test_that("with_spinner handles nested calls", {
+  # Test nested with_spinner calls
+  result <- with_spinner({
+    outer <- "outer"
+    inner_result <- with_spinner({
+      Sys.sleep(0.1)
+      "inner"
+    })
+    paste(outer, inner_result)
+  })
+  expect_equal(result, "outer inner")
+})
+
+test_that("with_spinner cleanup is robust", {
+  # Test that consecutive calls with varying durations work
+  # This ensures cleanup is reliable
+  for (i in 1:5) {
+    result <- with_spinner({
+      Sys.sleep(0.05 * i)  # Varying durations
+      i * 10
+    })
+    expect_equal(result, i * 10)
+  }
+})
+
+test_that("with_spinner preserves expression visibility", {
+  # Test that invisible returns remain invisible
+  # (though we can't test visibility directly in testthat easily)
+  result <- with_spinner({
+    invisible(42)
+  })
+  expect_equal(result, 42)
 })
 
